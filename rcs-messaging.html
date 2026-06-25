@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doccla · RCS Messaging Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --matron:#11363F; --scrubs:#59B993; --vital-green:#7AF992; --vital-yellow:#FAED4D;
+  --mint:#ECF3EF; --white:#FFFFFF;
+  --breath:linear-gradient(135deg,#ECF3EF,#FFFFFF);
+  --line:rgba(17,54,63,.12); --line-2:rgba(17,54,63,.22);
+  --soft:rgba(17,54,63,.58); --soft-2:rgba(17,54,63,.42);
+  --shadow:0 1px 4px rgba(17,54,63,.08); --shadow-lg:0 8px 28px rgba(17,54,63,.14);
+  --serif:Georgia,'Times New Roman',serif; --sans:'Inter',ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:var(--sans); font-weight:300; color:var(--matron);
+  background:var(--breath); background-attachment:fixed; -webkit-font-smoothing:antialiased; line-height:1.5;}
+
+/* ---- App bar ---------------------------------------------------------- */
+.appbar{display:flex; align-items:center; gap:14px; padding:14px 28px;
+  background:var(--matron); color:var(--white); position:sticky; top:0; z-index:50;}
+.appbar .brand{display:flex; align-items:center; gap:10px; font-family:var(--serif); font-size:19px; font-weight:600;}
+.appbar .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--vital-green);}
+.appbar .tag{margin-left:auto; font-size:12.5px; color:rgba(255,255,255,.72); display:flex; align-items:center; gap:8px;}
+.appbar .tag span{background:rgba(255,255,255,.1); padding:5px 10px; border-radius:100px; font-weight:500; letter-spacing:.02em;}
+
+/* ---- Hero --------------------------------------------------------------*/
+.hero{max-width:1080px; margin:0 auto; padding:64px 28px 36px; text-align:center;}
+.hero .kicker{font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--scrubs);}
+.hero h1{font-family:var(--serif); font-size:42px; font-weight:600; line-height:1.15; margin:14px auto 18px; max-width:760px;}
+.hero p{font-size:16px; color:var(--soft); max-width:620px; margin:0 auto; font-weight:300;}
+.hero .stats{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:34px;}
+.stat{background:var(--white); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow);
+  padding:16px 22px; min-width:150px;}
+.stat b{display:block; font-family:var(--serif); font-size:26px; color:var(--matron);}
+.stat span{font-size:12.5px; color:var(--soft); display:block; margin-top:4px;}
+
+/* ---- Section shell -------------------------------------------------------*/
+section{max-width:1080px; margin:0 auto; padding:48px 28px;}
+.section-head{text-align:center; max-width:640px; margin:0 auto 38px;}
+.section-head .kicker{font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--scrubs);}
+.section-head h2{font-family:var(--serif); font-size:30px; font-weight:600; margin-top:10px;}
+.section-head p{font-size:14.5px; color:var(--soft); margin-top:10px; font-weight:300;}
+
+/* ---- Demo layout: phone + scenario list ---------------------------------*/
+.demo{display:grid; grid-template-columns:300px 1fr; gap:40px; align-items:start;}
+@media (max-width:760px){.demo{grid-template-columns:1fr;}}
+
+.scenarios{display:flex; flex-direction:column; gap:8px;}
+.scenario-btn{display:flex; align-items:flex-start; gap:12px; text-align:left; width:100%;
+  background:var(--white); border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+  cursor:pointer; box-shadow:var(--shadow); font-family:var(--sans); color:var(--matron);}
+.scenario-btn .ic{width:34px; height:34px; border-radius:9px; background:var(--mint); flex:none;
+  display:flex; align-items:center; justify-content:center; color:var(--matron);}
+.scenario-btn b{display:block; font-size:14px; font-weight:600;}
+.scenario-btn span{font-size:12.5px; color:var(--soft); display:block; margin-top:2px; line-height:1.4;}
+.scenario-btn.active{border-color:var(--scrubs); background:#F2FBF7;}
+.scenario-btn.active .ic{background:var(--matron); color:var(--vital-green);}
+
+/* ---- Phone mockup --------------------------------------------------------*/
+.phone-wrap{display:flex; justify-content:center;}
+.phone{width:340px; background:#0c0c0c; border-radius:38px; padding:12px; box-shadow:var(--shadow-lg);}
+.phone-screen{background:#ECEDEF; border-radius:28px; overflow:hidden; height:640px; display:flex; flex-direction:column;}
+.thread-bar{background:var(--white); padding:14px 16px 12px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px;}
+.thread-bar .av{width:38px; height:38px; border-radius:50%; background:var(--matron); color:var(--vital-green);
+  display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:600; font-size:16px; flex:none;}
+.thread-bar .who{flex:1;}
+.thread-bar .who b{font-size:14.5px; display:flex; align-items:center; gap:5px;}
+.thread-bar .who .verified{width:14px; height:14px; border-radius:50%; background:#1488EB; color:#fff;
+  display:inline-flex; align-items:center; justify-content:center; font-size:9px;}
+.thread-bar .who span{font-size:11.5px; color:var(--soft);}
+
+.thread{flex:1; overflow-y:auto; padding:16px 12px; display:flex; flex-direction:column; gap:10px;}
+.msg-row{display:flex; flex-direction:column; gap:6px; max-width:86%;}
+.msg-row.in{align-self:flex-start;}
+.msg-row.out{align-self:flex-end; align-items:flex-end;}
+.bubble{background:var(--white); border-radius:14px; padding:10px 13px; font-size:13.5px; box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.msg-row.out .bubble{background:var(--scrubs); color:#06251C;}
+.timestamp{font-size:10px; color:#8A8F94; padding:0 4px;}
+
+.rich-card{background:var(--white); border-radius:14px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.06); width:230px;}
+.rich-card .img{height:108px; background:linear-gradient(135deg,var(--matron),#1c5160); display:flex;
+  align-items:center; justify-content:center; color:var(--vital-green);}
+.rich-card .body{padding:11px 13px;}
+.rich-card .body b{font-size:13px; display:block;}
+.rich-card .body p{font-size:11.5px; color:var(--soft); margin-top:3px; line-height:1.4;}
+.rich-card .actions{border-top:1px solid var(--line);}
+.rich-card .actions button{display:block; width:100%; background:none; border:none; border-top:1px solid var(--line);
+  padding:10px; font-size:12.5px; font-weight:600; color:var(--matron); cursor:pointer; font-family:var(--sans);}
+.rich-card .actions button:first-child{border-top:none;}
+.rich-card .actions button.primary{color:#0F7A45;}
+
+.carousel{display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; max-width:100%;}
+.carousel .ccard{flex:none; width:148px; background:var(--white); border-radius:12px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.carousel .ccard .img{height:68px; background:var(--mint); display:flex; align-items:center; justify-content:center; color:var(--scrubs);}
+.carousel .ccard .body{padding:8px 10px;}
+.carousel .ccard .body b{font-size:11.5px; display:block;}
+.carousel .ccard .body p{font-size:10px; color:var(--soft); margin-top:2px; line-height:1.3;}
+
+.chips{display:flex; gap:7px; flex-wrap:wrap; align-self:flex-end;}
+.chip{background:var(--white); border:1px solid var(--line-2); border-radius:100px; padding:7px 13px;
+  font-size:12px; font-weight:600; color:var(--matron); box-shadow:var(--shadow); cursor:pointer;}
+.chip:hover{border-color:var(--scrubs); background:#F2FBF7;}
+
+.typing{display:flex; gap:4px; padding:10px 13px; background:var(--white); border-radius:14px; width:fit-content;}
+.typing span{width:6px; height:6px; border-radius:50%; background:var(--soft-2); animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.15s;} .typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0); opacity:.5;} 30%{transform:translateY(-4px); opacity:1;}}
+
+.thread-bar.tag-row{padding:0; border:none;}
+.fallback-strip{background:#FFF7E0; color:#8A5A00; font-size:11px; padding:6px 16px; text-align:center; border-bottom:1px solid var(--line);}
+
+/* ---- Feature grid ---------------------------------------------------------*/
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+@media (max-width:760px){.grid{grid-template-columns:1fr;}}
+.feature{background:var(--white); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:var(--shadow);}
+.feature .ic{width:38px; height:38px; border-radius:10px; background:var(--mint); color:var(--matron);
+  display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
+.feature b{font-family:var(--serif); font-size:16.5px; display:block; margin-bottom:6px;}
+.feature p{font-size:13.5px; color:var(--soft); line-height:1.55;}
+
+/* ---- Comparison table -----------------------------------------------------*/
+.compare{background:var(--white); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); overflow:hidden;}
+.compare table{width:100%; border-collapse:collapse; font-size:13.5px;}
+.compare th, .compare td{padding:13px 18px; text-align:left; border-bottom:1px solid var(--line);}
+.compare th{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--soft); font-weight:600; background:var(--mint);}
+.compare td:first-child{font-weight:600; color:var(--matron);}
+.compare tr:last-child td{border-bottom:none;}
+.ok{color:#0F7A45; font-weight:600;}
+.no{color:#B23A3A; font-weight:600;}
+
+/* ---- Footer CTA ------------------------------------------------------------*/
+.cta{background:var(--matron); color:var(--white); border-radius:18px; padding:44px; text-align:center; margin:20px 28px 64px; max-width:1024px; margin-left:auto; margin-right:auto;}
+.cta h2{font-family:var(--serif); font-size:26px; font-weight:600;}
+.cta p{font-size:14px; color:rgba(255,255,255,.78); max-width:520px; margin:12px auto 0;}
+.cta .note{font-size:11.5px; color:rgba(255,255,255,.55); margin-top:22px;}
+
+svg{width:18px; height:18px;}
+</style>
+</head>
+<body>
+
+<div class="appbar">
+  <div class="brand"><span class="dot"></span>Doccla</div>
+  <div class="tag"><span>Concept demo</span><span>Not a live integration</span></div>
+</div>
+
+<div class="hero">
+  <div class="kicker">RCS Business Messaging</div>
+  <h1>What patient messaging could look like beyond SMS</h1>
+  <p>Doccla already messages patients about kits, vitals and check-ins over SMS. RCS (Rich Communication Services) keeps the same phone number and channel, but adds verified branding, rich cards, quick-reply buttons and two-way structured check-ins — no app download required.</p>
+  <div class="stats">
+    <div class="stat"><b>98%</b><span>RCS open rate within 3 min*</span></div>
+    <div class="stat"><b>0</b><span>App installs needed</span></div>
+    <div class="stat"><b>1</b><span>Existing patient phone number</span></div>
+  </div>
+</div>
+
+<section>
+  <div class="section-head">
+    <div class="kicker">Interactive demo</div>
+    <h2>Pick a moment in the patient journey</h2>
+    <p>Each scenario below is a real RCS message pattern, mocked up as it would appear in a patient's native messaging app.</p>
+  </div>
+
+  <div class="demo">
+    <div class="scenarios" id="scenario-list"></div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="thread-bar">
+            <div class="av">D</div>
+            <div class="who">
+              <b>Doccla <span class="verified">✓</span></b>
+              <span id="scenario-subtitle">Care Team · RCS</span>
+            </div>
+          </div>
+          <div class="fallback-strip" id="fallback-strip" style="display:none;">Delivered as SMS — recipient device doesn't support RCS</div>
+          <div class="thread" id="thread"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="kicker">Why it matters</div>
+    <h2>Built for the kind of messages Doccla already sends</h2>
+  </div>
+  <div class="grid">
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M7.8 4.2A9 9 0 1119.8 7.8"/></svg></div>
+      <b>Verified sender</b>
+      <p>A blue checkmark and the Doccla name/logo on every message — patients can trust it's not a phishing text, which matters when you're sending links to upload vitals.</p>
+    </div>
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 9h16"/></svg></div>
+      <b>Rich cards, not bare links</b>
+      <p>Setup guides, appointment confirmations and device alerts render as cards with an image, summary and tappable buttons — instead of a wall of text and a raw URL.</p>
+    </div>
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <b>One-tap structured replies</b>
+      <p>Suggested-reply chips turn a symptom check-in into a tap, not a typed sentence — and the response comes back as clean structured data, not free text to parse.</p>
+    </div>
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
+      <b>Delivery &amp; read receipts</b>
+      <p>Know whether a patient has actually seen a "your readings are overdue" nudge before a care coordinator picks up the phone to chase it manually.</p>
+    </div>
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h7"/></svg></div>
+      <b>Carousels for guidance</b>
+      <p>Swipeable cards for things like "how to fit your BP cuff" or "what your readings mean" — reusable content, no separate help-centre link needed.</p>
+    </div>
+    <div class="feature">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0z"/><path d="M3 12h18"/></svg></div>
+      <b>Graceful SMS fallback</b>
+      <p>If a patient's handset or carrier doesn't support RCS, the same message degrades to plain SMS automatically — no patient is left without a message.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="kicker">The trade-off</div>
+    <h2>RCS vs. plain SMS, for Doccla's use cases</h2>
+  </div>
+  <div class="compare">
+    <table>
+      <tr><th>Capability</th><th>SMS (today)</th><th>RCS</th></tr>
+      <tr><td>Verified sender identity</td><td class="no">No — looks like any unknown number</td><td class="ok">Yes — name, logo, checkmark</td></tr>
+      <tr><td>Rich card / image / buttons</td><td class="no">Text + raw link only</td><td class="ok">Native card with tap actions</td></tr>
+      <tr><td>Structured quick replies</td><td class="no">Patient must type "1" or "YES"</td><td class="ok">Tap a labelled chip</td></tr>
+      <tr><td>Delivery / read receipts</td><td class="no">Not available</td><td class="ok">Delivered + read status</td></tr>
+      <tr><td>Works without an app</td><td class="ok">Yes</td><td class="ok">Yes</td></tr>
+      <tr><td>Fallback if unsupported</td><td>—</td><td class="ok">Auto-degrades to SMS</td></tr>
+      <tr><td>Carrier / device support</td><td class="ok">Universal</td><td>Most modern Android + iOS 18+; degrades gracefully otherwise</td></tr>
+    </table>
+  </div>
+</section>
+
+<div class="cta">
+  <h2>Same number, same workflow — richer message</h2>
+  <p>This is a concept demo to scope what an RCS pilot could cover for kit delivery, vitals check-ins and appointment reminders. No patient data or live messaging integration is used here.</p>
+  <div class="note">*Industry-reported open-rate figure for RCS, included for illustration only — not a Doccla-measured result.</div>
+</div>
+
+<script>
+const scenarios = [
+  {
+    id: 'kit',
+    title: 'Device delivery & setup',
+    desc: 'Rich card replaces a bare tracking link',
+    subtitle: 'Kit Delivery · RCS',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg>',
+    fallback: false,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="rich-card">
+            <div class="img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><path d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg></div>
+            <div class="body">
+              <b>Your monitoring kit is on its way</b>
+              <p>Arriving tomorrow, 8am&ndash;1pm. Includes BP cuff, pulse oximeter and a set-up guide.</p>
+            </div>
+            <div class="actions">
+              <button class="primary">Track delivery</button>
+              <button>Watch 90-sec setup video</button>
+            </div>
+          </div>
+          <span class="timestamp">9:02 AM · Delivered</span>
+        </div>`;
+    }
+  },
+  {
+    id: 'checkin',
+    title: 'Daily symptom check-in',
+    desc: 'Quick-reply chips instead of free text',
+    subtitle: 'Daily Check-in · RCS',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 9 2.2 5.5 5.5 5c2-.3 3.7.8 4.5 2.2C10.8 5.8 12.5 4.7 14.5 5c3.3.5 4.8 4 3 7.5C15 16.65 12 21 12 21z"/></svg>',
+    fallback: false,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="bubble">Morning! How are you feeling today compared to yesterday?</div>
+          <span class="timestamp">8:00 AM · Read</span>
+        </div>
+        <div class="msg-row out">
+          <div class="chips">
+            <span class="chip">Better</span>
+            <span class="chip">About the same</span>
+            <span class="chip">Worse</span>
+          </div>
+        </div>
+        <div class="msg-row out">
+          <div class="bubble">About the same</div>
+          <span class="timestamp">8:03 AM</span>
+        </div>
+        <div class="msg-row in">
+          <div class="bubble">Thanks, logged. Don't forget your BP reading before 10am.</div>
+          <span class="timestamp">8:03 AM · Read</span>
+        </div>`;
+    }
+  },
+  {
+    id: 'overdue',
+    title: 'Overdue reading nudge',
+    desc: 'Read receipt confirms the nudge landed',
+    subtitle: 'Vitals Reminder · RCS',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>',
+    fallback: false,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="bubble">We haven't received today's blood pressure reading yet. All okay?</div>
+          <span class="timestamp">2:14 PM · Read 2:16 PM</span>
+        </div>
+        <div class="msg-row out">
+          <div class="chips">
+            <span class="chip">Taking it now</span>
+            <span class="chip">Need help</span>
+            <span class="chip">Cuff isn't working</span>
+          </div>
+        </div>
+        <div class="msg-row in">
+          <div class="typing"><span></span><span></span><span></span></div>
+        </div>`;
+    }
+  },
+  {
+    id: 'appointment',
+    title: 'Appointment & video call',
+    desc: 'One tap to join, no portal login',
+    subtitle: 'Appointments · RCS',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
+    fallback: false,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="rich-card">
+            <div class="img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><rect x="3" y="6" width="14" height="11" rx="2"/><path d="M17 9l4-2v10l-4-2"/></svg></div>
+            <div class="body">
+              <b>Video review with Nurse A. Patel</b>
+              <p>Today, 4:30 PM. Have your cuff and oximeter nearby.</p>
+            </div>
+            <div class="actions">
+              <button class="primary">Join video call</button>
+              <button>Reschedule</button>
+            </div>
+          </div>
+          <span class="timestamp">3:45 PM · Delivered</span>
+        </div>`;
+    }
+  },
+  {
+    id: 'education',
+    title: 'Care guidance carousel',
+    desc: 'Swipeable cards replace a help-centre link',
+    subtitle: 'Patient Education · RCS',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h7"/></svg>',
+    fallback: false,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="bubble">A few tips now that you've had the cuff a week:</div>
+          <span class="timestamp">11:00 AM · Read</span>
+        </div>
+        <div class="msg-row in">
+          <div class="carousel">
+            <div class="ccard">
+              <div class="img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="26" height="26"><path d="M12 2a5 5 0 015 5v3a5 5 0 01-10 0V7a5 5 0 015-5z"/></svg></div>
+              <div class="body"><b>Cuff position</b><p>Bare arm, cuff at heart height.</p></div>
+            </div>
+            <div class="ccard">
+              <div class="img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="26" height="26"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg></div>
+              <div class="body"><b>Best time</b><p>Same time daily, before meds.</p></div>
+            </div>
+            <div class="ccard">
+              <div class="img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="26" height="26"><path d="M12 21s-7-4.35-9.5-8.5C.7 9 2.2 5.5 5.5 5c2-.3 3.7.8 4.5 2.2"/></svg></div>
+              <div class="body"><b>Reading high?</b><p>Rest 5 min, retake once.</p></div>
+            </div>
+          </div>
+        </div>`;
+    }
+  },
+  {
+    id: 'fallback',
+    title: 'Graceful SMS fallback',
+    desc: 'Unsupported device — same message, plain text',
+    subtitle: 'Vitals Reminder',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0z"/><path d="M3 12h18"/></svg>',
+    fallback: true,
+    render(thread){
+      thread.innerHTML = `
+        <div class="msg-row in">
+          <div class="bubble">Doccla: We haven't received today's BP reading. Reply OK once done, or HELP if you're having trouble.</div>
+          <span class="timestamp">2:14 PM · Delivered</span>
+        </div>
+        <div class="msg-row out">
+          <div class="bubble">OK</div>
+          <span class="timestamp">2:30 PM</span>
+        </div>`;
+    }
+  }
+];
+
+const list = document.getElementById('scenario-list');
+const thread = document.getElementById('thread');
+const subtitle = document.getElementById('scenario-subtitle');
+const fallbackStrip = document.getElementById('fallback-strip');
+
+function renderList(activeId){
+  list.innerHTML = scenarios.map(s => `
+    <button class="scenario-btn ${s.id===activeId?'active':''}" data-id="${s.id}">
+      <span class="ic">${s.icon}</span>
+      <span><b>${s.title}</b><span>${s.desc}</span></span>
+    </button>
+  `).join('');
+  list.querySelectorAll('.scenario-btn').forEach(btn => {
+    btn.addEventListener('click', () => select(btn.dataset.id));
+  });
+}
+
+function select(id){
+  const s = scenarios.find(x => x.id === id);
+  renderList(id);
+  subtitle.textContent = s.subtitle;
+  fallbackStrip.style.display = s.fallback ? 'block' : 'none';
+  s.render(thread);
+}
+
+select(scenarios[0].id);
+</script>
+
+</body>
+</html>
